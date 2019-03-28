@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/jquery/jquery.cookie.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="/static/lib/md5/md5.js"></script>
+    <style type="text/css">
+        /* body {
+             background-color: #efba2b;
+         }*/
+
+        .LGBG {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+        }
+
+        .LGTable {
+
+            min-width: 25%;
+            min-height: 36%;
+            background-color: rgba(153, 217, 246, 0.6);
+            border-radius: 15px;
+            padding: 0px 10px 0px 10px;
+        }
+
+        .loginError {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div th:replace="head/head::header"></div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-horizontal LGTable row" action="/loginStatus" method="post">
+                <div class="page-header text-center">
+                    <h3 style="font-family: '楷体';font-weight: bold;">YYB登录
+                    </h3>
+                    <p class="loginError" th:if="${loginStatus=='error'}">账号或密码输入错误</p>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+
+                        <input type="text" name="userName" id="userName" class="form-control userName"
+                               style="position: relative;padding-left:30px;"
+                               placeholder="请输入你的用户账号"/>
+                        <i class="fa fa-user-o" style="position: absolute;bottom:10px;left: 25px;"
+                           aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="password" name="password" class="form-control password"
+                               style="position: relative;padding-left:30px;"
+                               id="password" placeholder="请输入你的密码"/>
+                        <i class="fa fa-lock" style="position: absolute;bottom:10px;left: 25px;"
+                           aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-5">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="rmbMe" name="myremember"/> <span
+                                    style="font-family: '微软雅黑';font-size: 15px;">记住我</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12"><input type="submit" onclick="login()" class="btn btn-primary form-control"
+                                                  value="登录  "/>
+                    </div>
+                    <div class="col-md-12"><a href="/register" class="btn btn-primary form-control"
+                                              style="margin-top: 5px;">注册</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:replace="footer/footer::footer"></div>
+</div>
+<script src="/static/js/login.js"></script>
+</body>
+</html>

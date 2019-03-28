@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <style>
+
+        .registerTable {
+            padding: 24px 28px;
+            border-radius: 6px;
+            background-color: rgba(232, 232, 232, 0.6);
+
+        }
+
+        .ts {
+            color: #9ccf46;
+        }
+       #UserError{
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div th:replace="head/head::header"></div>
+    <div class="row ">
+        <div class="col-md-offset-3 col-md-6 ">
+            <form class="registerTable row" id="registerUserTable">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span><i class="fa fa-user-o" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="text" name="userName" onchange="validationUserName(this)"
+                               aria-describedby="helpBlock2" class="form-control" placeholder="手机号码"/>
+                    </div>
+                   <div class="input-group"><span id="UserError"></span></div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span> <i class="fa fa-lock"
+                                                                 aria-hidden="true"></i></span></div>
+                        <input type="password" name="password" onchange="validationPassword(this)" class="form-control"
+                               placeholder="密码"/>
+                    </div>
+                    <div class="input-group"><span class="ts">密码由6~15位小写字母、数字和下划线组成</span></div>
+                </div>
+                <div class="form-group ">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span> 验证码:</span></div>
+                        <input type="text" class="form-control" name="validateMSG"/>
+                        <div class="input-group-btn"><span class="btn btn-primary" onclick="sendMSG()" id="MSStatus">获取验证码</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="form-control btn btn-primary" onclick="register()">注册</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+    <div th:replace="footer/footer::footer"></div>
+</div>
+<script src="/static/lib/md5/md5.js"></script>
+<script src="/static/js/register.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Message</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #8ebac6;
+        }
+
+        .imgTitle {
+            width: 100%;
+            height: 110px;
+        }
+
+        .myMenu {
+            position: absolute;
+            top: 53px;
+            bottom: 0px;
+            padding-top: 4px;
+            border-right: 1px solid red;
+        }
+
+        .menu_A {
+            padding: 0px 8px;
+
+        }
+
+        .myTitle {
+            width: 100%;
+            height: 53px;
+            line-height: 53px;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+        .myTitleS {
+
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+        .back{
+            color: white;
+        }
+        .checkTitle{
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-radius: 4px 4px;
+            line-height: 33px;
+        }
+        .myContainerBG{
+            position: relative;
+            background-color: rgba(255,241,237,0.3);
+            height: 700px;
+            border-radius: 0px 0px 1.5% 1.5%;
+        }
+    </style>
+</head>
+<body>
+<div class="container myContainerBG">
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="bg-primary myTitle">
+                <span class="myTitleS">YYB管理页面</span>
+                <a href="/index" class="back pull-right">去到YYB</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 myMenu">
+        <div th:replace="head/head::adminHeader"></div>
+    </div>
+    <div class="col-md-9 col-md-offset-2">
+        <div class="row">
+        <p class="bg-success checkTitle text-center">待审核的音乐文件</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>歌曲名称</th>
+                        <th>上传用户</th>
+                        <th>上传时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m,nstat : ${pageInfo.list}">
+                        <td><i th:text="${nstat.index+1+pageInfo.pageSize*(pageInfo.pageNum-1)}"></i></td>
+                        <td th:text="${m.musicName}">天行九歌</td>
+                        <td th:text="${m.user.userName}">wyz</td>
+                        <td th:text="${m.uploadTime}">19-01-11 15:13</td>
+                        <td><a  th:href="@{/admin/updateMusicStatus(id=${m.id},status=true,pn=${pageInfo.pageNum})}" th:onclick="'javascript:send(\''+${m.user.id}+'\',\''+${m.id}+'\')'" class="btn btn-primary" >通过</a>&nbsp;|&nbsp;<div class="btn btn-danger">未通过</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="PublishedPlugIn/PublisPlugIn::pageInfo"></div>
+        <script>
+
+            $(".pageHref").each(function () {
+                var mHref = "/admin/message" +"?pn=" + $(this).attr("href");
+                $(this).attr("href", mHref);
+            });
+        </script>
+    </div>
+</div>
+</div>
+<!--websocket-->
+<script>
+    var websocket = null;
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://localhost:8600/websocket/"+userId);
+    }
+    else {
+        alert('当前浏览器 不支持WebSocket')
+    }
+
+    //连接发生错误的回调方法
+    websocket.onerror = function () {
+        setMessageInnerHTML("连接发生错误");
+    };
+
+    //连接成功建立的回调方法
+    websocket.onopen = function () {
+        console.log("连接成功")
+    }
+
+    //接收到消息的回调方法，此处添加处理接收消息方法，当前是将接收到的信息显示在网页上
+    websocket.onmessage = function (event) {
+        setMessageInnerHTML(event.data);
+    }
+
+    //连接关闭的回调方法
+    websocket.onclose = function () {
+        /*setMessageInnerHTML("连接关闭,如需登录请刷新页面。");*/
+        console.log("连接关闭,如需登录请刷新页面。")
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        closeWebSocket();
+    }
+
+    //将消息显示在网页上，如果不需要显示在网页上，则不调用该方法
+    function setMessageInnerHTML(innerHTML) {
+        $(".userCount").html(innerHTML);
+    }
+    //发送消息
+    function send(musicUserId,musicId){
+        websocket.send(musicUserId+"|"+musicId);
+    }
+
+</script>
+
+</body>
+</html>

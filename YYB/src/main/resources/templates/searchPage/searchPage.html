@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div class="row">
+        <div th:replace="head/head::header"></div>
+        <div class="col-md-12">
+            <div class="h3">已查询到的结果</div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+
+            </div>
+
+        </div>
+        <div th:replace="footer/footer::footer"></div>
+    </div>
+</div>
+</body>
+</html>

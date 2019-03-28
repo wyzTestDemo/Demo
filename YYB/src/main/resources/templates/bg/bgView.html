@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="myBG" th:fragment="bgView">
+    <div class="myBGTest">
+        <div class="mybody">
+            <canvas id="canvas" width="1349" height="404"></canvas>
+            <script src="/static/js/bgView.js"></script>
+        </div>
+    </div>
+</div>
+<div th:fragment="musicAnimationBG">
+    <div id="fileWrapper" class="file_wrapper">
+        <div id="info">
+            HTML5 Audio API showcase | An Audio Viusalizer
+        </div>
+        <label for="uploadedFile">选择本地mp3文本查看效果:</label>
+        <input type="file" id="uploadedFile" ></input>
+    </div>
+    <div id="wrapper">
+        <div id="visualizer_wrapper">
+            <canvas id='canvas' width="800" height="350"></canvas>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/js/html5_audio_visualizer.js"></script>
+</div>
+</body>
+</html>

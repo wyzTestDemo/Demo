@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>MyUpload</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/jQuery-emoji/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="/static/lib/jQuery-emoji/jquery.emoji.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <link rel="stylesheet" href="/static/css/musicPlayer.css"/>
+    <style>
+        .table_Upload {
+            min-height: 633.6px;
+        }
+
+        .Up_Num {
+            font-size: 14px;
+        }
+
+        .throughColor {
+            color: #14ff34;
+
+        }
+
+        .notThroughColor {
+            color: #d5cfcf;
+        }
+
+        .musicYYB {
+            margin-top: 0px;
+            border-radius: 8px 8px;
+            background-color: rgba(21, 21, 155, 0.6);
+            position: relative;
+        }
+
+        .musicImgDIV {
+            max-width: 45px;
+            max-height: 45px;
+            cursor: pointer;
+            padding: 5px;
+            background-color: #888;
+            border-radius: 50%;
+            margin: 10px 10px;
+        }
+
+        .musicName {
+            overflow: hidden;
+            white-space: nowrap;
+            margin-top: 1%;
+            margin-right: 5px;
+            padding: 0px 4px;
+            background-color: rgba(244, 255, 243, 0.4);
+            border-radius: 4px 4px;
+            max-height: 45px;
+            line-height: 45px;
+        }
+
+        .musicName span {
+            position: relative;
+            animation: myfirst 20s linear infinite;
+        }
+
+        @keyframes myfirst {
+            from {
+                left: 0%;
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        #musicPlayLH {
+            line-height: 45px;
+        }
+
+        .editMusic {
+            font-family: '宋体';
+            font-size: 15px;
+            color: #888;
+        }
+
+        .musicTime {
+            font-family: '宋体';
+            font-size: 15px;
+            text-align: center;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div th:replace="head/head::header"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row musicYYB">
+                <div class="col-md-1">
+                    <div class="row">
+                        <div class="musicImgDIV">
+                            <img class="dh dh-paused" id="musicDH" width="35px"
+                                 height="35px" src="/static/img/music/test03.png" alt="该音乐已失效"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <div class="row">
+                        <div class="musicName"><span>你好</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="h4" style="font-family: '宋体';font-weight: bold;">已上传音乐</div>
+                    </div>
+                    <div class="panel-body">
+                        <audio id="myAudio" preload="auto"></audio>
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr>
+                                <th style="width: 35%;text-align: center;">音乐名称</th>
+                                <th style="width: 20%;text-align: center;">操作</th>
+                                <th style="width: 15%;text-align: center;">审核状态</th>
+                                <th style="width: 20%;text-align: center;">上传时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="m : ${pageInfo.list}">
+                                <td>
+                                    <div class="col-md-12">
+                                        <div id="musicPlayLH" class="row text-center">
+                                            <div class="col-md-4">
+                                                <div class="row text-right">
+                                                <span>
+                                                 <i class="fa fa-2x fa-play-circle" th:id="pl+${m.id}"
+                                                    th:onclick="'myPlay(\''+${m.id}+'\',\''+${m.musicName}+'\',\''+${m.musicType}+'\')'"
+                                                    style="cursor: pointer; " aria-hidden="true"></i>
+                                            </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="row  text-left">
+                                            <span class="h4"
+                                                  th:text="${{m.musicName}}"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td class="text-center  editMusic" id="musicPlayLH">
+                                    <span th:class="${m.through}?'btn btn-default':'disabled btn btn-default disable'+${m.id}"
+                                          title="收藏" th:onclick="'javascript:heart(this,\''+${m.id}+'\')'">
+                                        <i class="fa fa-heart-o" th:unless="${m.collectionStatus}"
+                                           aria-hidden="true"></i>
+                                        <i class="fa fa-heart" th:if="${m.collectionStatus}" aria-hidden="true"></i>
+                                    </span>
+                                    <span th:class="${m.through}?'btn btn-default':'disabled btn btn-default disable'+${m.id}"
+                                          th:onclick="'javascript:downMusicById(\''+${m.id}+'\')'" title="下载"><i
+                                            class="fa fa-download" aria-hidden="true"></i></span>
+
+                                    <span th:class="${m.through}?'btn btn-default':'disabled btn btn-default disable'+${m.id}"
+                                          title="查看评论"><a
+                                            th:href="'/specificComments?spencificCommentsId='+${m.post.id}"> <i
+                                            class="fa  fa-commenting-o" aria-hidden="true"
+                                    ></i><span class="Up_Num" th:text="${m.post.posts.size()}">45 </span></a></span>
+
+
+                                </td>
+                                <td id="musicPlayLH" class="text-center">
+                                    <span th:if="${m.through}" title="审核通过" class="throughColor"><i
+                                            class="fa fa-check-circle fa-2x" aria-hidden="true"></i></span>
+                                    <span th:unless="${m.through}" title="审核中..."
+                                          th:class="${!m.through}?'notThroughColor through'+${m.id}"><i
+                                            class="fa fa-check-circle fa-2x" aria-hidden="true"></i></span>
+                                </td>
+                                <td id="musicPlayLH" class="musicTime">
+                                    <sapn th:text="${m.uploadTime}">18-12-11-14:34</sapn>
+                                </td>
+                            </tr>
+                            <script src="/static/js/collection.js"></script>
+                            <script src="/static/js/musicPlay.js"></script>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row text-center">
+                            <span class="h6 text-warning">看不见我，已经见底了</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="background-color: white;">
+                    <div class="col-md-4">
+                        <div th:replace="PublishedPlugIn/PublisPlugIn::pageInfo"></div>
+                        <script>
+                            /*url在表头的那个[[${session.token}]];*/
+                            $(".pageHref").each(function () {
+
+                                var mHref = "/myupload/" + url + "?pn=" + $(this).attr("href");
+                                $(this).attr("href", mHref);
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="h3">我要上传</div>
+                    </div>
+                    <div class="panel-body" style="padding: 0px 15px;">
+                        <div class="row">
+                            <div style="width: 100%;height:300px;overflow-y: scroll" id="myUFS"></div>
+                        </div>
+                        <div class="row hide" id="myProgress">
+                            <div class="progress progress-striped">
+                                <div class="progress-bar progress-bar-info" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 0%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer" style="background-color: white;">
+                        <div class="row">
+                            <div class="col-md-3 text-center" style="position: relative;"><i
+                                    class="fa fa-3x fa-cloud-upload" aria-hidden="true"></i>
+                                <span class="h5 text-primary">点击我上传...</span>
+                                <input type="file" multiple="multiple" id="FS" onchange="upFS()"
+                                       accept=".aac,.ogg,.wav,.ape,.flac,.mp3"
+                                       style="cursor: pointer;display:block;opacity:0;position: absolute;top: 0px;left: 0px; width: 100%;height: 100%;opacity: 0;"/>
+                            </div>
+                            <div class="col-md-9 text-right hide">
+                                <div class="btn btn-primary">确定上传</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <script src="/static/js/musicUpload.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="footer/footer::footer"></div>
+</div>
+<script src="/static/js/downMusic.js"></script>
+</body>
+</html>

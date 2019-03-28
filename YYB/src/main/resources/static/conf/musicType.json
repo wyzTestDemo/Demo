@@ -1,0 +1,21 @@
+{
+	"musicType": [
+		{
+			"id":"m001",
+			"imag":"./img/music/music.jpg",
+			"children": "华语无损音乐 "
+		}, {
+			"id":"m002",
+			"imag":"./img/music/music.jpg",
+			"children": "无损电影原声 "
+		}, {
+			"id":"m003",
+			"imag":"./img/music/music.jpg",
+			"children": "民族音乐"
+		}, {
+			"id":"m004",
+			"imag":"./img/music/music.jpg",
+			"children": "欧美无损音乐"
+		}
+	]
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>InFile</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #8ebac6;
+        }
+
+        .imgTitle {
+            width: 100%;
+            height: 110px;
+        }
+
+        .myMenu {
+            position: absolute;
+            top: 53px;
+            bottom: 0px;
+            padding-top: 4px;
+            border-right: 1px solid red;
+        }
+
+        .menu_A {
+            padding: 0px 8px;
+
+        }
+
+        .myTitle {
+            width: 100%;
+            height: 53px;
+            line-height: 53px;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+
+        .user_search {
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .mysearchImg {
+            position: absolute;
+            left: 5px;
+            top: 14%;
+        }
+
+        .myTitleS {
+
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .back {
+            color: white;
+        }
+
+        .myContainerBG {
+            position: relative;
+            background-color: rgba(255, 241, 237, 0.3);
+            height: 700px;
+            border-radius: 0px 0px 1.5% 1.5%;
+        }
+        .downTimeColor {
+            font-family: '宋体';
+            font-size: 13px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container myContainerBG">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="bg-primary myTitle">
+                    <span class="myTitleS">YYB管理页面</span>
+                    <a href="/index" class="back pull-right">去到YYB</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 myMenu">
+            <div th:replace="head/head::adminHeader"></div>
+        </div>
+        <div class="col-md-9 col-md-offset-2">
+            <div class="row">
+                <form action="/admin/inFile/inFileSoso">
+                    <div class="form-group">
+
+                        <input type="text" name="soso" placeholder="请输入歌曲名称" class="form-control user_search"/>
+                        <span class="mysearchImg"><i class="fa fa-search " aria-hidden="true"></i></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-9 col-md-offset-2">
+            <div class="row">
+                <audio id="myAudio" preload="auto"></audio>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">序号</th>
+                        <th class="text-center">歌曲名称</th>
+                        <th class="text-center">上传用户</th>
+                        <th class="text-center">下载数量</th>
+                        <th class="text-center">上传时间</th>
+                        <th class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m,mStat : ${pageInfo.list}">
+                        <td class="text-center"><i th:text="${mStat.index+1+pageInfo.pageSize*(pageInfo.pageNum-1)}"></i></td>
+                        <td class="text-center"><span th:text="${m.musicName}"></span></td>
+                        <td class="text-center"><span th:text="${m.user.userName}"></span></td>
+                        <td class="text-center"><span th:text="${m.downloadNum}"></span></td>
+                        <td class="text-center"><span class="downTimeColor" th:text="${m.uploadTime}"></span></td>
+                        <td class="text-center"><span>
+                                                 <i class="fa fa-play-circle btn btn btn-primary" title="播放"
+                                                    th:id="pl+${m.id}"
+                                                    th:onclick="'myPlay(\''+${m.id}+'\',\''+${m.musicName}+'\',\''+${m.musicType}+'\')'"
+                                                    style="cursor: pointer; " aria-hidden="true"></i>
+                                            </span>|&nbsp;<span><a th:href="'/admin/inFile/deleteFile/'+${m.id}"><i class="fa fa-trash-o btn btn-danger" aria-hidden="true"></i></a></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="background-color: white;">
+                    <div class="col-md-4">
+                        <div th:replace="PublishedPlugIn/PublisPlugIn::pageInfo"></div>
+                        <script src="/static/js/pageHref.js"></script>
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var dq = [[${dq}]];
+                            if(dq=="inFile"){
+                                myPage('/admin/inFile');
+                            }else {
+                                var soso = [[${soso}]];
+                                pageSoso(soso,'/admin/inFile/inFileSoso');
+                            }
+                            /*]]>*/
+
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/musicPlay.js"></script>
+</body>
+</html>

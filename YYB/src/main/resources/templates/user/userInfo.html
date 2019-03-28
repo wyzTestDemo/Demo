@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>UserInfo</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/md5/md5.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <!--日期控件-->
+    <link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <style>
+        .myUserInfo {
+            height: 800px;
+            border: 1px solid black;
+        }
+
+        .myUserInfoTile {
+            background-color: #d5e4f1;
+            position: relative;
+            text-align: center;
+        }
+
+        .myUserInfoTile span {
+            position: absolute;
+            top: 50%;
+            left: 40%;
+        }
+
+
+        #img {
+            width: 190px;
+            height: 210px;
+        }
+        .musicPlayLineCenter {
+            line-height: 35px;
+        }
+        .indexFamily {
+            font-family: 华文隶书;
+            font-weight: bold;
+        }
+        .authorFont {
+            font-size: 15px;
+            font-family: 楷体;
+        }
+        .downTimeColor {
+            font-family: '宋体';
+            font-size: 13px;
+            text-align: center;
+            color: #888;
+        }
+        .notCollectionBody{
+            line-height: 200px;
+            letter-spacing: 1em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div class="row">
+        <div th:replace="head/head::header"></div>
+        <div class="col-md-3 text-center bg-warning" style="padding-top: 10px;">
+            <div class="row">
+                <div style="position: relative;" align="center" id="userImgD">
+                    <img th:src="'http://localhost:8650/myResources/img/'+${session.user.image}" class="thumbnail" id="img" alt=""/>
+                    <input type="file" title="更换头像" id="FSUserIMG" onchange="userChange(this)"
+                           accept="image/png, image/jpeg, image/gif, image/jpg"
+                           style="opacity: 0;display: block;  width: 100%; height: 100%;position: absolute;top: 0;left: 0;cursor: pointer;"/>
+                </div>
+                <div style="background: transparent;border: 0px;padding-bottom: 4px;">
+                    <table class="mytable">
+                        <tbody>
+                        <tr align="center">
+                            <td><span class="myMuted">上传数量</span><br/><b
+                                    th:text="${session.user.uploadMusics.size()}">9</b></td>
+                            <td><span class="myMuted">已发帖子</span><br/><b th:text="${session.user.posts.size()}">9</b>
+                            </td>
+                            <td><span class="myMuted">我的收藏</span><br/><b
+                                    th:text="${session.user.collectionItems.size()}">9</b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div>
+                    <img src="/static/img/user/UserInfoBG.jpg"
+                         style="width: 100%; max-height: 135px;margin-bottom: 15px;" class="img-responsive"/>
+                </div>
+                <form action="#" id="userInfo">
+                    <table class="table table-bordered" style="border-color: white;">
+                        <tbody>
+                        <tr>
+                            <td colspan="2" class="text-center text-info"><h4>个人信息</h4></td>
+                        </tr>
+                        <tr>
+                            <td class="myUserInfoTile">用户名:</td>
+                            <td>
+                                <input type="text" name="userName" class="form-control editUserInfo"
+                                       th:value="${session.user.userName}" readonly="readonly"/></td>
+                        </tr>
+                        <tr>
+                            <td class="myUserInfoTile">密码:</td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="password" name="oldPassword" class="form-control editUserInfo"
+                                           th:value="${session.user.password}" readonly="readonly" disabled="disabled"/>
+                                    <span class="input-group-addon btn btn-default" id="editP"><i
+                                            class="fa fa-pencil-square-o"
+                                            aria-hidden="true"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hide" id="newPassword">
+                            <td class="myUserInfoTile">新密码</td>
+                            <td id="password"></td>
+                        </tr>
+
+                        <td class="myUserInfoTile">性别:</td>
+                        <td>
+
+                            <input type="radio" name="sex" value="M" th:checked="${session.user.sex=='M'}"/>男 &nbsp;&nbsp;
+                            <input type="radio" name="sex" value="F" th:checked="${session.user.sex=='F'}"/>女
+                        </td>
+
+                        <tr>
+                            <td class="myUserInfoTile">出生年月:</td>
+                            <td>
+                                <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
+                                     data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                    <input class="form-control editUserInfo" name="birth" size="16" type="text"
+                                           th:value="${session.user.birth}" readonly=""/>
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                                <script>
+                                    $('.form_date').datetimepicker({
+                                        language: 'zh-CN',
+                                        weekStart: 1,
+                                        todayBtn: 1,
+                                        autoclose: 1,
+                                        todayHighlight: 1,
+                                        startView: 2,
+                                        minView: 2,
+                                        forceParse: 0
+                                    });
+                                </script>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="myUserInfoTile"><span>个人信息:</span></td>
+                            <td><textarea placeholder="说点什么呗..." name="introduction"
+                                          th:text="${session.user.introduction}"
+                                          style="width: 100%;height: 170px;resize: none;" class="editUserInfo"
+                                          readonly="readonly"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+                <div class="input-group col-md-12 text-right">
+                    <button class="btn btn-primary" style="width: 20%;" onclick="editUser(this)"><span>编辑</span>&nbsp;&nbsp;<i
+                            class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                    <button class="btn btn-primary hide" onclick="updateUser(this)"
+                            style="width: 20%; margin-left: 2%;">确定
+                    </button>
+                </div>
+                <script src="/static/js/UserInfo.js"></script>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row" style="background-color: #d5e5f8;margin-top: 5px;">
+                <div class="text-center bg-success"> <span class="h3">我的收藏</span></div>
+                <audio id="myAudio" preload="auto"></audio>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="width: 10%;text-align: center;">序号</th>
+                        <th style="width: 25%;">音乐名称</th>
+                        <th style="width: 20%;text-align: center;">操作</th>
+                        <th style="width: 15%;">下载数量</th>
+                        <th style="width: 15%;text-align: center">上传时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m,mStat : ${session.user.collectionItems}">
+                        <td class="text-center">
+                            <span class="musicPlayLineCenter indexFamily"
+                                  th:text="${mStat.index+1}"></span>
+                        </td>
+                        <td>
+                            <div class="musicPlayLineCenter text-left">
+                                            <span>
+                                                 <i class="fa fa-2x fa-play-circle" th:id="pl+${m.uploadMusic.id}"
+                                                    th:onclick="'myPlay(\''+${m.uploadMusic.id}+'\',\''+${m.uploadMusic.musicName}+'\',\''+${m.uploadMusic.musicType}+'\')'"
+                                                    style="cursor: pointer; " aria-hidden="true"></i>
+                                            </span>
+                                &nbsp;
+                                <span class="h4"
+                                      th:text="${{m.uploadMusic.musicName}}"></span>-<span
+                                    style="color: rgba(39,44,56,0.58);">...</span>
+                            </div>
+
+                        </td>
+                        <td class="text-center"
+                            style="font-family: '宋体';font-size:15px;line-height: 35px;color: #888;">
+                                    <span class="btn btn-default"
+                                          title="收藏" th:onclick="'heart(this,\''+${m.uploadMusic.id}+'\')'">
+
+                                        <i class="fa fa-heart"  aria-hidden="true"></i>
+                                    </span>
+                            <span class="btn btn-default" th:onclick="'javascript:downMusicById(\''+${m.uploadMusic.id}+'\')'"
+                                  title="下载"><i
+                                    class="fa fa-download" aria-hidden="true"></i></span>
+                            <span class="btn btn-default"
+                                  title="查看评论"> <a th:href="'/specificComments?spencificCommentsId='+${m.uploadMusic.post.id}"> <i
+                                    class="fa  fa-commenting-o" aria-hidden="true"
+                            ></i><span class="Up_Num">45 </span></a> </span>
+
+
+                        </td>
+                        <td>
+                            <div class="musicPlayLineCenter">
+                                <span><i class="fa fa-bar-chart" aria-hidden="true"></i></span>
+                                <span th:text="${m.uploadMusic.downloadNum}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="musicPlayLineCenter downTimeColor">
+                                <span th:text="${m.uploadMusic.uploadTime}">18-12-11-14:34</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${session.user.collectionItems.size()==0}">
+                        <td colspan="5"><div class="notCollectionBody text-center"><b>你还没有收藏任何歌曲</b></div></td>
+                    </tr>
+                    </tbody>
+                    <script src="/static/js/collection.js"></script>
+                    <script src="/static/js/musicPlay.js"></script>
+                    <!--下载的js-->
+                    <script src="/static/js/downMusic.js"></script>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <footer class="row" style="background-color: #ccd1de; margin-top: 5px; margin-bottom: 5px;">
+                <div th:replace="PublishedPlugIn/PublisPlugIn::BarCharts"></div>
+            </footer>
+        </div>
+
+    </div>
+    <div th:replace="footer/footer::footer"></div>
+</div>
+</body>
+</html>

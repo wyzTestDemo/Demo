@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>AdminIndex</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #8ebac6;
+        }
+
+        .imgTitle {
+            width: 100%;
+            height: 110px;
+        }
+
+        .myMenu {
+            position: absolute;
+            top: 53px;
+            bottom: 0px;
+            padding-top: 4px;
+            border-right: 1px solid red;
+        }
+
+        .menu_A {
+            padding: 0px 8px;
+
+        }
+
+        .myTitle {
+            width: 100%;
+            height: 53px;
+            line-height: 53px;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+
+        .user_search {
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .mysearchImg {
+            position: absolute;
+            left: 5px;
+            top: 14%;
+        }
+
+        .myTitleS {
+
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .back {
+            color: white;
+        }
+
+        .myContainerBG {
+            position: relative;
+            background-color: rgba(255, 241, 237, 0.3);
+            height: 700px;
+            border-radius: 0px 0px 1.5% 1.5%;
+        }
+
+        .downTimeColor {
+            font-family: '宋体';
+            font-size: 13px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container myContainerBG">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="bg-primary myTitle">
+                    <span class="myTitleS">YYB管理页面</span>
+                    <a href="/index" class="back pull-right">去到YYB</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 myMenu">
+            <div th:replace="head/head::adminHeader"></div>
+        </div>
+        <div class="col-md-9 col-md-offset-2">
+            <div class="row">
+                <form action="/admin/selUserStatus/selUserStatusSoso" method="get">
+                    <div class="form-group">
+
+                        <input type="text" name="soso" placeholder="请输入用户名称"
+                               class="form-control user_search"/>
+                        <span class="mysearchImg"><i class="fa fa-search " aria-hidden="true"></i></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-9 col-md-offset-2">
+            <div class="row">
+                <p>当前在线人数有: <span class="userCount"></span></p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">序号</th>
+                        <th class="text-center">用户名</th>
+                        <th class="text-center">在线状态</th>
+                        <th class="text-center">注册时间</th>
+                        <th class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m,mStat : ${pageInfo.list}">
+                        <td class="text-center"><i
+                                th:text="${mStat.index+1+pageInfo.pageSize*(pageInfo.pageNum-1)}"></i></td>
+                        <td class="text-center"><b th:text="${m.userName}"></b></td>
+                        <td class="text-center"><span><i class="fa fa-user-circle-o" aria-hidden="true"></i></span></td>
+                        <td class="text-center"><span class="downTimeColor" th:text="${m.registerTime}"></span></td>
+                        <td class="text-center">
+                            <span><a th:href="'/admin/selUserStatus/resetUserPassword?id='+${m.id}" title="重置密码"><i class="fa fa-repeat btn btn-primary"
+                                                              aria-hidden="true"></i></a></span>
+                            |
+                            <span><a th:href="'/admin/selUserStatus/delUser/'+${m.id}"><i class="fa fa-trash-o btn btn-danger" aria-hidden="true"></i></a></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="background-color: white;">
+                    <div class="col-md-4">
+                        <div th:replace="PublishedPlugIn/PublisPlugIn::pageInfo"></div>
+                        <script src="/static/js/pageHref.js"></script>
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var dq = [[${dq}]];
+                            if (dq == "soso") {
+                                var soso = [[${soso}]];
+                                pageSoso(soso, '/admin/selUserStatus/selUserStatusSoso');
+                            } else {
+                                myPage('/admin/selUserStatus');
+                            }
+                            /*]]>*/
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/myWebsocket.js"></script>
+</body>
+</html>

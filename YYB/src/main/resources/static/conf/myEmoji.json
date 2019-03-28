@@ -1,0 +1,27 @@
+{
+	"myEmoji": [
+		{
+			"name": "动态表情",
+			"path": "lib/jQuery-emoji/img/qq/",
+			"maxNum": 91,
+			"excludeNums": [
+				41,
+				45,
+				54
+			],
+			"file": ".gif",
+			"placeholder": "#qq_{alias}#"
+		}, {
+			"name": "静态表情",
+			"path": "lib/jQuery-emoji/img/tieba/",
+			"maxNum": 50,
+			"excludeNums": [
+				41,
+				45,
+				54
+			],
+			"file": ".jpg",
+			"placeholder": "#tieba_{alias}#"
+		}
+	]
+}

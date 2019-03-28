@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Index</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <style>
+        .myMore {
+            color: #158AD8;
+            cursor: pointer;
+        }
+
+        .my_discussion {
+            padding: 20px 15px;
+            margin-bottom: 20px;
+            border: 1px #158AD8 solid;
+            border-radius: 20px;
+        }
+
+        .my-img-responsive {
+            max-width: 45px;
+            max-height: 45px;
+        }
+
+        .myIMG_NAME {
+            line-height: 45px;
+        }
+        #img {
+            width: 190px;
+            height: 210px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div th:replace="head/head::header"></div>
+    <section class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <p class="h2">问答区</p>
+                    <div style="width: 12%; border-bottom: 3px #000066 solid;margin-top:3px ;"></div>
+                    <div style="width: 100%; border-bottom: 2px #000088 solid; margin-bottom: 5px;"></div>
+                    <div class="media-list  my_discussion">
+                        <div class="media" th:each="m : ${postsQ}">
+                            <div class="media-left media-middle">
+                                <a href="#">
+                                   <img th:src="'http://localhost:8650/myResources/img/'+${m.user.image}"
+                                         class="media-object img-circle my-img-responsive" th:title="${m.user.userName}"
+                                         alt=""/>
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <a th:href="'/specificComments?spencificCommentsId='+${m.id}"><span
+                                        class="myIMG_NAME h5" th:text="${m.postName}"></span></a>
+                            </div>
+                        </div>
+                        <div class="text-right myMore">进入社区<i class="fa  fa-long-arrow-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <span class="h4">热帖榜 </span>
+                            <span class="pull-right  myMore">更多》</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <div class="clearfix"></div>
+                                <div class="list-group-item" th:each="m : ${postsP}">
+                                    <a th:href="'/specificComments?spencificCommentsId='+${m.id}"> <span class="myMore"
+                                                                                                         th:text="${m.postName}"></span>
+                                    </a>
+                                    <span class="pull-right myMore"> <i class="fa fa-user" aria-hidden="true"></i><span th:text="${m.user.userName}"></span></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <span class="h4">社区音乐</span>
+                            <span class="pull-right  myMore">更多》</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-3" th:each="m : ${musicIndex}">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <span><audio id='myAudio'
+                                                     preload='auto'></audio><i
+                                                class="fa fa-2x fa-play-circle"
+                                                th:id="pl+${m.id}"
+                                                title="播放/暂停"
+                                                th:onclick="'myPlay(\''+${m.id}+'\',\''+${m.musicName}+'\',\''+${m.musicType}+'\')'"
+                                                style="cursor: pointer; "
+                                                aria-hidden="true"></i> </span>
+                                        &nbsp;&nbsp;
+                                        <span title="收藏"
+                                              th:onclick="'javascript:heart(this,\''+${m.id}+'\')'">
+                                        <i class="fa fa-heart-o" th:unless="${m.collectionStatus}"
+                                           aria-hidden="true"></i>
+                                        <i class="fa fa-heart" th:if="${m.collectionStatus}"
+                                           aria-hidden="true"></i>
+                                    </span>
+                                        &nbsp;
+                                        <span th:onclick="'javascript:downMusicById(\''+${m.id}+'\')'"
+                                              title="下载"><i
+                                                class="fa fa-download" aria-hidden="true"></i></span>
+                                        &nbsp;
+                                        <a th:href="'/specificComments?spencificCommentsId='+${m.post.id}">
+                                        <span
+                                                title="查看评论"> <i class="fa  fa-commenting-o" aria-hidden="true"
+                                        ></i><span class="Up_Num"
+                                                   th:text="${m.post.posts.size()}">45 </span></span>
+                                        </a>
+
+                                    </div>
+                                    <div class="panel-footer"><span th:text="${m.musicName}"></span></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="thumbnail row" th:unless="${session.user==null}">
+                        <div style="background-color: rgba(136,228,235,0.3);" align="center" id="userImgD">
+                            <img th:src="'http://localhost:8650/myResources/img/'+${session.user.image}" class="thumbnail" id="img" alt=""/>
+                        </div>
+                        <div style="background: transparent;border: 0px;padding-bottom: 4px;">
+                            <table class="mytable">
+                                <tbody>
+                                <tr align="center">
+                                    <td><span class="myMuted">上传数量</span><br/><b
+                                            th:text="${session.user.uploadMusics.size()}">9</b></td>
+                                    <td><span class="myMuted">已发帖子</span><br/><b th:text="${session.user.posts.size()}">9</b>
+                                    </td>
+                                    <td><span class="myMuted">我的收藏</span><br/><b
+                                            th:text="${session.user.collectionItems.size()}">9</b></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-warning row">
+                        <div class="panel-heading"><span class="h4">社区公告<span class="badge pull-right">30</span></span>
+                        </div>
+                        <div class="panel-body" style="padding: 8px 5px;">
+                            <div class="myAnnouncement">
+                                <a href="#" th:if="${adminMessage!=null}">站内公告</a>
+                                <p>站内暂时没有消息显示！！！</p>
+                            </div>
+                            <div style="width: 100%;height: 1px;box-shadow: -3px -3px 15px 1px #888888;"></div>
+
+                        </div>
+                        <div class="panel-footer" style="background-color: white;border: 0px;">
+                            <div class="myBtnGroup">
+                                <div class="btn btn-primary">上一页</div>
+                                <div class="btn btn-primary pull-right">下一页</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="row" th:replace="footer/footer::footer"></footer>
+    <script src="/static/js/musicPlay.js"></script>
+    <script src="/static/js/downMusic.js"></script>
+    <script src="/static/js/collection.js"></script>
+</div>
+
+</body>
+</html>

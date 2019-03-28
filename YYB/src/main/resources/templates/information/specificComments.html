@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SpecificComments</title>
+    <link rel="stylesheet" href="/static/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/lib/jQuery-emoji/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="/static/lib/jQuery-emoji/jquery.emoji.css"/>
+    <script src="/static/lib/jquery/jquery3.3.1.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+    <script src="/static/lib/jQuery-emoji/jquery.mousewheel-3.0.6.min.js"></script>
+    <script src="/static/lib/jQuery-emoji/jquery.mCustomScrollbar.min.js"></script>
+    <script src="/static/lib/jQuery-emoji/jquery.emoji.js"></script>
+    <style>
+        .myUserInfoImag {
+            min-width: 45px;
+        }
+
+        .myUserInfoImagLet {
+            min-width: 70px;
+        }
+    </style>
+    <!--具体评论-->
+</head>
+<body>
+<div th:replace="bg/bgView::bgView"></div>
+<div class="container myMain">
+    <div class="row">
+        <div th:replace="head/head::header"></div>
+        <div class="col-md-12">
+            <div class="row" style="border-bottom: 1px solid black; padding-right: 1em;">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="myUserInfoImagLet img-responsive img-thumbnail"
+                                 th:src="'http://localhost:8650/myResources/img/'+${post.user.image}"
+                                 alt="..."/>
+                        </a>
+                        <p class="text-center"
+                           style="magin-left:3px;font-size:14px;margin-top:5px;color: rgba(113,151,239,0.72);"><i
+                                class="fa fa-user" aria-hidden="true"></i><span th:text="${post.user.userName}"></span>
+                        </p>
+                        <p> <span class="text-center"
+                                  style="font-size: 10px;color: #888;"
+                                  th:text="${post.timePost}"></span></p>
+                    </div>
+                    <div class="media-body">
+                        <div class="media-heading"
+                             style="border-bottom: 1px solid rgba(0,0,0,0.26);">
+                            <span th:if="${post.uploadMusic!=null}"><audio id='myAudio' preload='auto'></audio><i class="fa fa-2x fa-play-circle"
+                                                                                th:id="pl+${post.uploadMusic.id}"
+                                                                                title="播放/暂停"
+                                                                                th:onclick="'myPlay(\''+${post.uploadMusic.id}+'\',\''+${post.uploadMusic.musicName}+'\',\''+${post.uploadMusic.musicType}+'\')'"
+                                                                                style="cursor: pointer; "
+                                                                                aria-hidden="true"></i> </span>
+                            <span class="h4" th:text="${post.postName}"></span>
+                        </div>
+
+                        <p class="mPostContent" style="padding-left: 1em;padding-right: 1em"
+                           th:text="${post.postContent}"></p>
+                        <br/>
+                        <br/>
+                        <p class="text-right">  <span th:class="${post.uploadMusic.through}?'btn btn-default':'disabled btn btn-default disable'+${post.uploadMusic.id}"  th:if="${post.uploadMusic!=null}"
+                                                      title="收藏"  th:onclick="'javascript:heart(this,\''+${post.uploadMusic.id}+'\')'">
+                                        <i class="fa fa-heart-o"  th:unless="${post.uploadMusic.collectionStatus}" aria-hidden="true"></i>
+                                        <i class="fa fa-heart"   th:if="${post.uploadMusic.collectionStatus}" aria-hidden="true"></i>
+                                    </span>
+                            <span th:class="${post.uploadMusic.through}?'btn btn-default':'disabled btn btn-default disable'+${post.uploadMusic.id}"  th:if="${post.uploadMusic!=null}"
+                                  th:onclick="'javascript:downMusicById(\''+${post.uploadMusic.id}+'\')'" title="下载"><i
+                                    class="fa fa-download" aria-hidden="true"></i></span>
+
+                            <span class="btn btn-default"
+                                  title="查看评论"><span> <i class="fa  fa-commenting-o" aria-hidden="true"
+                            ></i><span class="Up_Num" th:text="${post.posts.size()}">45 </span></span></span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-12" style=" background-color: rgba(0,0,0,0.05);">
+            <div style="margin: 10px 0px 10px 0px;min-height: 780px;padding:15px 2em 0px 2em; background-color: white;">
+                <div class="media" th:each="m : ${post.posts}" th:if="${post.posts!=null}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="myUserInfoImag img-responsive img-thumbnail"
+                                 th:src="'http://localhost:8650/myResources/img/'+${m.user.image}"
+                                 alt="..."/>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading"
+                            style="color: rgba(113,151,239,0.72);border-bottom: 1px solid rgba(0,0,0,0.26);">
+                            <i class="fa fa-user" aria-hidden="true"></i><span th:text="${m.user.userName}"></span>
+                            <span class="pull-right"
+                                  style="font-size: 11px;color: #888;" th:text="${m.timePost}"></span>
+                        </h5>
+                        <p class="mPostContent" style="padding-left: 1em;padding-right: 1em"
+                           th:text="${m.postContent}"></p>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="media" th:if="${post.posts.size()==0}">
+                    <div style="color:#888888;font-size:23px;letter-spacing:3em;font-weight: bold;line-height: 780px;text-align: center;">
+                        暂无任何评论
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div th:replace="PublishedPlugIn/PublisPlugIn::pageInfo"></div>
+        </div>
+        <div class="col-md-12">
+            <div th:replace="PublishedPlugIn/PublisPlugIn::fbzj"></div>
+        </div>
+        <div th:replace="footer/footer::footer"></div>
+    </div>
+</div>
+<script>
+    $(".Information").addClass("active");
+</script>
+<script src="/static/js/specificComments.js"></script>
+<script src="/static/js/posting.js"></script>
+<script src="/static/js/musicPlay.js" th:if="${post.uploadMusic!=null}"></script>
+<script src="/static/js/downMusic.js" th:if="${post.uploadMusic!=null}"></script>
+<script src="/static/js/collection.js" th:if="${post.uploadMusic!=null}"></script>
+</body>
+</html>

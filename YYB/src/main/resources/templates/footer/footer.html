@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="row" style="padding: 0px;" th:fragment="footer">
+    <div class="col-md-12" style="background-color: #aeff25;min-height: 40px;width: 100%;">
+        <p style="padding-right:10px;line-height:40px;font-family: '楷体';font-size: 18px;">资源共享，资源是大家最最基本的东东，许多网络爱好者不求利益，把自己收集的一些通过平台共享给大家，这就是资源共享，希望大家能贡献一份力量，把你觉得有价值的,一首歌，共享出来，这样我们才能有动力前进。谢谢</p>
+    </div>
+    <script th:inline="javascript">
+        var user = [[${session.user}]];
+    </script>
+    <script src="/static/js/mailWebSocket.js"></script>
+</div>
+</body>
+</html>

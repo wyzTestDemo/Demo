@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>PlublisPlugIn</title>
+</head>
+<body>
+<div class="row"  th:fragment="fbzj">
+    <div class="col-md-12 fbbt" style="padding: 0;">
+        <div class="form-group">
+            <input type="text" class="form-control" id="ft_title" placeholder="标&nbsp;&nbsp;&nbsp;题"
+                   style="font-size: 18px;"/>
+        </div>
+    </div>
+    <script>
+        var in_Title = $("title").html();
+        if (in_Title != 'Information') {
+            $(".fbbt").addClass("hide");
+        }
+    </script>
+    <div class="col-md-12" style="padding: 0;">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background-color: white;">
+                <ul class="nav nav-pills">
+                    <li class="hide" role="presentation"
+                        style="position: relative;padding-right: 8px; margin-right:6px;background: url(/static/img/nav/t1_03.jpg) right center no-repeat;">
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        <span>图片</span>
+                        <input type="file" title="" accept="image/png, image/jpeg, image/gif, image/jpg"
+                               style="opacity: 0;display: block;  width: 100%; height: 100%;position: absolute;top: 0;left: 0;"/>
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var emkk =  {
+                                "myEmoji": [
+                                    {
+                                        "name": "动态表情",
+                                        "path": "/static/lib/jQuery-emoji/img/qq/",
+                                        "maxNum": 91,
+                                        "excludeNums": [
+                                            41,
+                                            45,
+                                            54
+                                        ],
+                                        "file": ".gif",
+                                        "placeholder": "#qq_{alias}#"
+                                    }, {
+                                        "name": "静态表情",
+                                        "path": "/static/lib/jQuery-emoji/img/tieba/",
+                                        "maxNum": 50,
+                                        "excludeNums": [
+                                            41,
+                                            45,
+                                            54
+                                        ],
+                                        "file": ".jpg",
+                                        "placeholder": "#tieba_{alias}#"
+                                    }
+                                ]
+                            };
+                            /*]]>*/
+                        </script>
+                    </li>
+                    <li style="position: relative;padding-right: 8px; margin-right:6px;background: url(/static/img/nav/t1_03.jpg) right center no-repeat;"
+                        class="hide">
+                        <i class="fa fa-music"></i>
+                        <span>音乐</span>
+                        <input type="file" id="FS" title="" accept=".aac,.ogg,.wav,.ape,.flac,.mp3"
+                               style="opacity: 0;display: block;  width: 100%; height: 100%;position: absolute;top: 0;left: 0;"
+                               onchange="upFS()"/>
+                    </li>
+                    <li style="position: relative;padding-right: 8px; margin-right:6px;">
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        <span>表情</span>
+                        <input type="button" id="myEmoji" title=""
+                               style="opacity: 0;display: block;  width: 100%; height: 100%;position: absolute;top: 0;left: 0;"/>
+
+                    </li>
+                </ul>
+
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div contenteditable="true" id="myUFS"
+                         style="height: 300px; padding:5px 10px;margin:5px 10px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.13);">
+                    </div>
+                </div>
+                <!-- <textarea id="test01"
+                           style="width: 100%;height: 300px; padding:5px 10px;margin-bottom: 10px; overflow-y: auto; border: 1px solid #000;"></textarea>-->
+            </div>
+            <div class="panel-footer" style="background-color: white;text-align: right;">
+                <div class="btn btn-primary" style="width: 13%;" onclick="submit_infor()">发表</div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var postM = [[${post}]];
+        /*]]>*/
+        $("#myUFS").emoji({
+            button: '#myEmoji',
+            icons: emkk.myEmoji
+        });
+        var postMId = null;
+        if (postM != null) {
+            postMId = postM.id;
+        }
+
+        function submit_infor() {
+            $.ajax({
+                url: "/myPosting",
+                type: 'POST',
+                data: {
+                    ft_content: myUFS.html(),
+                    title: $("#ft_title").val(),
+                    postId: postMId
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                complete: function (xhr, statuus) {
+                    var REDIRECT = xhr.getResponseHeader("REDIRECT");
+                    if (REDIRECT == "REDIRECT") {
+                        var win = window;
+                        while (win != win.top) {
+                            win = win.top;
+                        }
+                        win.location.href = xhr.getResponseHeader("CONTENTPATH");
+                    }
+                }
+            });
+        }
+    </script>
+    <!--上传文件数据js-->
+    <script src="/static/js/musicUpload.js"></script>
+    <!--本地变动的一个页面跳转触发事件-->
+    <script src="/static/js/comment.js"></script>
+</div>
+<div th:fragment="BarCharts">
+    <!--加载网上js需要联网才能获取的-->
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <div id="container" style="width: 76%; height: 400px; margin: 0 auto;background-color: transparent;"></div>
+    <script>
+        $(document).ready(function () {
+            var chart = {
+                type: 'column',
+                marginTop: 80,
+                marginRight: 40,
+                options3d: {
+                    enabled: true,  //显示图表是否设置为3D， 我们将其设置为 true
+                    alpha: 4,      //图表视图旋转角度
+                    beta: 5,   //图表视图旋转角度
+                    viewDistance: 300,   //定义图表的浏览长度
+                    depth: 50   //图表的合计深度，默认为100
+                }
+            };
+            var title = {
+                text: '我的站内文件动态'
+            };
+            var subtitle = {
+                text: '<a href="#" style="color: blue;">更换</a>'/*可以装个时间插件*/
+            };
+            var xAxis = {
+                categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                title: {
+                    text: '2019'
+                }
+            };
+            var yAxis = {
+                allowDecimals: false,
+                min: 0,
+                title: null
+
+            };
+
+            var tooltip = {
+                /*消息提示框*/
+                /*  headerFormat: '<b>{point.key}</b><br/>',*/
+                headerFormat: null,
+                pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} '
+            };
+
+            var plotOptions = {
+                column: {
+                    stacking: 'normal',
+                    depth: 40
+                }
+            };
+            var credits = {
+                enabled: false     //不显示LOGO
+            };
+            var series = [{
+                name: '上传数量',
+                data: [5, 3, 4, 7, 2, 2, 4, 7, 8, 3, 5, 18, 3],
+                color: '#f8be5d',
+                stack: '上传数量'
+            }, {
+                name: '下载数量',
+                data: [2, 5, 6, 2, 1, 4, 7, 2, 2, 4, 7, 8, 3],
+                color: '#5edbff',
+                stack: '下载数量'
+            }];
+
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            json.subtitle = subtitle;
+            /*副标题*/
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.tooltip = tooltip;
+            json.plotOptions = plotOptions;
+            json.series = series;
+            json.credits = credits;
+            $('#container').highcharts(json);
+        });
+    </script>
+</div>
+<div th:fragment="timePlugIn">
+
+</div>
+<div th:fragment="pageInfo">
+    <div class="row">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li th:if="${pageInfo.hasPreviousPage}">
+                    <a th:href="${pageInfo.prePage}" class="pageHref" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="i,stat:${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum==stat.count}?'active'">
+                    <a th:href="${i}" class="pageHref" th:text="${i}"></a>
+                </li>
+                <li th:if="${pageInfo.hasNextPage}">
+                    <a th:href="${pageInfo.nextPage}" class="pageHref" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+</body>
+</html>
