@@ -9,18 +9,16 @@ import com.example.yyb.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@Component
-@WebFilter(filterName = "indexFilter",urlPatterns = {"/index"})
+/*@Component
+@WebFilter(filterName = "indexFilter",urlPatterns = {"/index"})*/
 public class IndexFilter implements Filter {
     @Autowired
     private UserService userService;
@@ -37,11 +35,11 @@ public class IndexFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        System.out.println(postService==null);
         List<Post> postsP = postService.selPostPIndex();
         List<Post> postsQ = postService.selPostQuestionIndex();
         request.setAttribute("postsP", postsP);
         request.setAttribute("postsQ", postsQ);
-        //*社区音乐*//*
         UploadMusic uploadMusic = new UploadMusic();
         uploadMusic.setThrough(true);
         HttpSession session = request.getSession(false);

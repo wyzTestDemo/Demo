@@ -24,8 +24,8 @@ public class PostingStorageUtil {
             strPath=strPath+idName+".txt";
         }
         file = new File(strPath);
-        OutputStream out = new FileOutputStream(file);
-        out.write(ft.getBytes());
+        OutputStreamWriter out = new OutputStreamWriter( new FileOutputStream(file),"utf-8");
+        out.append(ft);
         out.close();
         Post post = new Post();
         if(title!=null&&!title.isEmpty()){
